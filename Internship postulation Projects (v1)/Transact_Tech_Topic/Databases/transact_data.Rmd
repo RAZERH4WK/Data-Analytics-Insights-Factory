@@ -1,0 +1,227 @@
+---
+title: "Market Opportunities Report: Transact Tech"
+author: "Roberto Andrés Aguilar Quesada"
+date: "3/10/2020"
+output: 
+  prettydoc::html_pretty:
+    theme: leonids
+  
+---
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(readxl)
+library(tidyquant)
+
+
+## ggplot theme
+mytheme <- theme(plot.title = element_text(face = "bold", size = (12), hjust = 0.5), 
+                 plot.caption = element_text(face = "italic", size = (7)),
+                  axis.title = element_text(size = (10)),
+                  axis.text = element_text(size = (8)))
+
+```
+
+# "Fighting social problems with the grow of Transact Tech Companies"
+
+As we now l one of the trending topics across the entire history of the human being is the fight against the poverty, so in the present what do we need know? It’s isn’t new that due the low remunerated jobs, unemployment, poor or inexistent cover of insurance, enventually disasters, and economic crisis. The people prefer to take actions, sometimes because of the poor systems of social justice and other of disorders of economic management. But this is the reality through the entire life there will be citizens more prepared than others to afront economic problem, not just talking about solvency, talking about the economic and socialy education level they have. 
+
+
+## Poverty around the world
+
+We can saw that the economic health of a country can be measured by the GDP (Grow Domestic Product), that trudly is the total monetary or market value of all the finished goods and services generated within a country's system, by a commonly measure of one year as a standard. This is complete because include the consumption, government spending, investment indexes and net exports, so it could be a clear panoramic view of a country’s reality, so if a local merchant sell to foreign consumers it reflects this deficit and the GDP will decrease.
+To be more accurate this can be measure in a Per Capita way, that samples how the GDP by unit, or been more specific, by citizen. According to the web magazine World Population Review we have the next heat map.  
+
+
+![ ](C:\Users\rober\Repositories\Insights_Factory\Transact_Tech_Topic\Databases\gdp_map.png)
+
+Here the darker places show us the countries that have a higher GDP Per Capita, like United States of America, Canada, most part of the European Union, Australia and Japan. Here is something that show is a huge problem, look on the African countries, according to this map they present the lowest GDP Per Capita in the world with less than $476 yearly, excluding South Africa. So, we must take a closer look to the social problems that affects this country, but not just this one there is a huge poverty measure in countries like Syria and Iraq. A pratical way to it, is by the next graph.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+# Visualization of GDP Per Capita
+
+gdp2020 <- read_delim("gdp_2020.csv", delim = ",", col_types = "icidddc", col_names = c("Rank", "Country", "Population", "GDP (UN '19)", "GDP (UN '16)", "Per Capita", "Continent" ), skip = 1)
+attach(gdp2020)
+
+gdp <- gdp2020 %>% filter(`Per Capita` < 900 & `Per Capita` != 0) 
+
+
+g1 <- ggplot(gdp, aes(reorder(Country, `Per Capita`), y = `Per Capita`)) + geom_col(aes(fill = Continent)) + coord_flip() + ggtitle("GDP Per Capita in Billions of Dollars of 2019" ) + labs(title = "GDP Per Capita in Dollars of 2019",y= "GDP value", x = " ", caption = "Source: Worldpopulationreview.com") + mytheme + scale_fill_viridis_d() 
+g1
+
+rm(gdp)
+detach(gdp2020)
+
+```
+
+
+
+## Misleading Social Problems
+
+According to the OCHA (Iraq Living Conditions Survey, 2004) publication, 10 million Iraqis, 30% of the population have lived in absolute poverty since 2003. Most of the 10 million are under the age of 30, that is, the demographic segment that would be believed as a group. more productive age. This can be assumed due to:
+
+- The occupation and violence left masses of indigents, around 2 million, after the armed conflicts. This left the country a “failure” of all reconstruction efforts, that is, zero possibilities of creating jobs and massive layoffs. So, there is dependence on imports, which in turn means the narrowness of local manufactures in terms of productive and human capacity.
+
+- Poor management of resources due to corruption and lack of experienced professionals, without considering the falsification of Shiite university degrees.
+
+Looking that there is a similar problem in Syria, now we’ll take a quick view at the African people. Excluding the pandemic problems and the climate change that has affected African, according to the ONU there is a greater problem, and this is the corruption of the government. Although it is a global phenomenon, it has a greater impact in economically lagged countries, where development capital falls unduly into the hands of the private sector, making poverty worse. According to the African Governance Report, corruption is the most pressing national problem, along with poverty and unemployment. In many surveys of how corruption is distinguished, Africa is the most corrupt territory in the world and the most underdeveloped region. Moving large masses of bribes for cash.
+
+There is the highest crime rate, high levels of human trafficking, and in some of its regions there is a strong presence of militias. The Democratic Republic of the Congo, the Central African Republic and Somalia are the countries on the continent with the highest number of mafias and the highest rates of arms trafficking. In South Sudan there is a significant market for smuggling of precious metals. The most common crime in the entire continent is human trafficking and arms trafficking, the second is the international trade in wild animals and irregular fishing.
+
+The countries with the highest arms smuggling are Sudan, the Democratic Republic of the Congo, the Central African Republic, Somalia and Libya. They are precisely areas where there is a strong presence of militias, such as Al Sahbab.
+
+Therefore, it makes people must decide between joining corruption or living in misery according to INTERPOL (2018). In the other hand there is a risky alternative way that some African people solve this problem and it is the robbery.
+
+
+### Robbery Index according to UNODC
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+# Plot of mean robbery over the last year for each continent
+robbery_data <- read_excel("robbery.xlsx", sheet = 1)
+attach(robbery_data)
+
+fixed_robbery_data <- robbery_data %>% group_by(Year, Region) %>% summarize(`Mean rate` = mean(Rate))
+
+
+
+g2<- ggplot(fixed_robbery_data, aes(x= Year, y= `Mean rate`, group = Region, color = Region)) + geom_line() + geom_point() + ggtitle("Index of Mean Robbery rate by continent" ) + labs(title = "Index of Mean Robbery Rate by continent", y= "Mean rate", x = "Year", caption = "Source: United Nations Office on Drugs and Crime(UNODC)") + mytheme
+g2
+
+detach(robbery_data)
+
+```
+
+
+As we can see the robbery stats of America are clearly greater but, don't forget this are only the reported robberies according to the ONU, so is not strange, seeing the huge advantage in security that the most part of America have over Africa. Other aspect that we can see is this high tendency to grow by the African countries, something thar if we ignore could overpass America in a few years.
+
+The main motive of all this are the huge amounts of money moved in Africa day by day, and it is what nobody notice, because the corrupted government is a money speedway. The trajectory and transparency of money transactions is what affects the people’s trust in give money and pay taxes to the government, that why the prefer to live using cash as the chart Global Economy show us, according to the World Bank.
+
+
+![ ](C:\Users\rober\Repositories\Insights_Factory\Transact_Tech_Topic\Databases\peopleWithCreditCards.jpg)
+
+
+We can see that one in countries with high credibility government like Canada, Luxemburg and USA the credit cards are very used, because the people don’t care about if the government know in what they spent their salary, that’s why they don’t have too much concern about paying them taxes, transparency is the key. The average for 2017 based on 141 countries was 19.41 percent. The highest value was in Canada: 82.58% and the lowest value was in Burma (Myanmar): 0.06 %.  Showing us that around the world only around 20% of money movement are made with cards.
+
+
+
+## Danger of having money in our hands
+
+If somebody steel your debit card, you report it to your financial institution and you’re not liable for any fraudulent. However, cash is harder to trace and is likely gone for good if an unknown person swipes it. And because cash requires no PIN number to use, it’s easier to spend once stolen.
+
+While debit cards are safer than using cash, they aren’t foolproof against fraud. If you don’t call your card issuer within two days of noticing strange activity on the account, you could be held liable for up to $500 in fraudulent charges. Plus, waiting to be reimbursed for any fraudulent charges can take time.
+
+Credit cards are typically the safest mode of payment. If somebody steals your credit card and makes purchases, federal law limits your liability to $50 and many cards offer zero liability protection. That means all you must do is call and explain that your card has been stolen and has incurred fraudulent charges, and you won’t be held responsible.
+
+If your cash goes missing, there isn’t any official number you can call in order to get it back.
+
+
+## Cost of Cash
+
+The insecurity is not the only problem that affects the economy of a country the weathering of money notes has a big chunk of that. Taking the example of the cost of dollars, the most used currency around the world, the amount that the Federal Reserve Spent by year is huge, in 2018 they spent around 800 million dollars in notes with a valued in 260 billion dollars and it was just in one year.
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+dollars <- read_excel("federal_reserve.xlsx", sheet = 1)
+attach(dollars)
+
+g3 <- ggplot(dollars, aes(x = Year, y = `Cost by Note`, color = Year)) + geom_col() + geom_point() + geom_line() + ggtitle("Unit Cost of Make Dollar Notes" ) + labs(title = "Unit Cost of Make Dollar Notes", y= "Cost by Note", x = "Year", caption = "Source: The Federal Reserve of USA") + mytheme
+g4 <- ggplot(dollars, aes(x = Year, y = Expense, color = Year)) + geom_col() + geom_point() + geom_line() + ggtitle("Expense Asociated to Make Dollar Notes" ) + labs(title = "Expense Asociated to Make Dollar Notes", y= "Expense", x = "Year", caption = "Source: The Federal Reserve of USA") + mytheme
+g3
+g4
+
+```
+
+
+Note:
+
+*Understand by expense acquiring assets to make new money notes and by costs, processing, printing and transforming the notes received yearly.
+Looking at this graph we can say that year by year the expense and unit cost are increasing quickly, that’s something that technology companies try to fight but at the same time is what in an indirect form ATM’s companies provoke.*
+
+
+## ATM’s Business
+
+ATM companies make money by each transaction fees added to the money withdrawal. Each time a customer makes a withdrawal from the ATM, the customer agrees to a predetermined fee for the service; the customer is then charged for this amount, either at the time or as an item on the customer's bank statement. This is distributed between the ATM owner and the company itself, and the amount depends on the withdrawal’s traffic of the area.
+
+Companies like Cardtronics sell its machines around $2000 and $8000, depending of the technology and capacity of course. For this reason, the ROI (Return of Investment), sometimes doesn’t seem to have too much solvency due their high costs and it could be sometimes difficult.
+There a difficult assessment to evaluate, if people want to manage an account and withdrawal money every time, they need it or the preference for using their credit or debit cards. 
+
+
+![ ](C:\Users\rober\Repositories\Insights_Factory\Transact_Tech_Topic\Databases\coverage.PNG)
+
+
+
+Seeing the coverage map of a company like Cardtronics we can conclude that the preference of using the ATMs depends on the low latency of crime according to the country.
+
+
+## Transact Tech Companies Business
+
+
+Important is to say they are not bank, neither issue cards, nor extend credit or set interest rates or fees, yet a Visa, MasterCard or AMEX credit card is in the hands of just about every second credit card user.
+
+
+![ ](C:\Users\rober\Repositories\Insights_Factory\Transact_Tech_Topic\Databases\transact_logos.png)
+
+
+Consumers can choose between hundreds of bank-issued cards with rewards tied to airlines, hotels and any number of products or services of value added. Banks chase our business by offering the most impressive rewards they can, especially at the Platinum level and above, because these are money spinners for the banks. And, after comparing offers on the market.
+
+They process the transaction between the banks and the retailer, charging a pre-determined interchange fee on the transaction between Issuers and Acquirers. Understand by “Issuing banks” are the local banks that provide you, the consumer, with the credit cards in your wallet. “Acquirers” are the banks used by the merchants and retailers that process your purchase transaction. This fees are variable for both sides based on factors such as the type of account (consumer or commercial), the type of card (standard or premium), the type of merchant (government, charity or service station, etc.) and the type of transaction (chip, non-chip or contactless). 
+
+Far beyond what these entities are, the real advantage is to facilitate the transaction by no carrying money and be more transparent with the transactions. So, here interferes a moral aspect about preferring security and traceability, helping their countries economy by the way, or stay at the defensive side not helping the country but securing that the money won’t increase the corruption. In other words, they are in a tunnel with only two exits, and we can conclude that the truly economic problem there needs to be solved in a socio-politic way.
+
+
+## Look at the Bonds there is an opportunity to help the world economy
+
+
+Without being insensitive there is a business opportunity while the close stock value of enterprises like Cardtronics is taking advantage increases by 7% in the third week of April 2020, according to Yahoo Finance, VISA and Mastercard are disregarding such a great opportunity.
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+
+#Mastercard Stock Price History
+stockMA <- read_excel("MacroTrends_Data_Download_MA.xlsx", sheet = 1)
+attach(stockMA)
+
+g5 <- stockMA %>% filter(Date > "2019-07-01 00:00:00 CET") %>% ggplot(aes(x = Date, y = close)) + geom_candlestick(aes(open = open, high = high, low = low, close = close)) + geom_ma(color = "darkgreen")+ theme_tq() + mytheme + labs(title = "Stock Price History of Mastercard", y= "Close Price", x = "Date Projection", caption = "Source: Macrotrends LLC")
+g5
+detach(stockMA)
+
+
+
+
+#VISA Stock Price History
+stockVI <- read_excel("MacroTrends_Data_Download_V.xlsx", sheet = 1)
+attach(stockVI)
+
+g6 <- stockVI %>% filter(Date > "2019-07-01 00:00:00 CET") %>% ggplot(aes(x = Date, y = close)) + geom_candlestick(aes(open = open, high = high, low = low, close = close)) + geom_ma(color = "darkgreen")+ theme_tq() + mytheme + labs(title = "Stock Price History of VISA", y= "Close Price", x = "Date Projection", caption = "Source: Macrotrends LLC")
+g6
+detach(stockVI)
+
+```
+
+
+What people sometimes ignore is that when we need to solve a big problem, we need to take big actions, and this only can be done by moving money. Incentive the Africans to start could be very difficult, but this is a joint action because if neither the government cooperate this will be a tunnel without exit. And there is where this business enters to fight the insecurity problem in Africa and the Middle East, by minimizing the crime index and the physic money, because the money has a cost too like the life of the people.
+
+
+
+## More information at
+
+Central Organization for Statistics and Information Technology (2004). Iraq Living Conditions Survey 2004.
+
+Federal Reserve Board. Board of Governors of the Federal Reserve System. (2020). Retrieved 1 March 2020, from https://www.federalreserve.gov/paymentsystems/coin_data.htm.
+
+Interactive, C. (2020). About | Cardtronics.com. Retrieved 1 March 2020, from https://www.cardtronics.com/about/.
+
+Transnational crime converging across Africa. Interpol.int. (2018). Retrieved 1 March 2020, from https://www.interpol.int/News-and-Events/News/2018/Transnational-crime-converging-across-Africa-INTERPOL.
+
+
+
+
+

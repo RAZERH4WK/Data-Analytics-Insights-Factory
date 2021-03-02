@@ -1,0 +1,153 @@
+---
+title: "Relación Pureza-Color de los Diamantes"
+author: "Roberto Andrés Aguilar Quesada"
+date: "2/26/2020"
+output: 
+  html_document:
+    df_print: paged
+    theme: journal
+    highlight: tango
+---
+
+```{r setup, include=FALSE, echo = FALSE}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(nortest)
+library(PerformanceAnalytics)
+
+
+
+#Nombramiento de variables
+
+names(diamonds)[1] <- "Quilates"
+names(diamonds)[2] <- "Calidad_de_corte"
+names(diamonds)[3] <- "Color"
+names(diamonds)[4] <- "Pureza"
+names(diamonds)[5] <- "Porc.Prof"
+names(diamonds)[6] <- "Tapa"
+names(diamonds)[7] <- "Precio"
+names(diamonds)[8] <- "Longitud"
+names(diamonds)[9] <- "Ancho"
+names(diamonds)[10] <- "Profundidad"
+
+
+```
+
+# Diamonds
+
+Inicialmente tenemos el dataframe diamonds, el cual está contenido dentro del paquete denominado *ggplot2*. La cual puede mostrarse de forma muestral a través del siguiente formato
+
+```{r, echo=FALSE}
+diamonds
+```
+
+El presente artículo pretende caracterizar nuestro dataframe, por lo cual se utilizará un *jitter plot*, tal como se muestra a continuación. Es importante destacar que este primer enfoque estará dirigido a conocer la distribución de los datos de *Pureza o Calidad* del material contra el *Color* de este.
+
+
+## Figura No. 1. Jitter Plot de Pureza contra Color
+
+```{r, echo=FALSE}
+ggplot(diamonds, aes(Pureza, Color)) + geom_jitter(aes(colour = Pureza), width = 0.45)
+
+```
+
+Este gráfico muestra datos curiosos en cuanto a la distribución de los datos conforme al grado de pureza y la coloración de cada uno de los diamantes. Donde los de mayor frecuencia corresponden a los de claridad VS2 y SI1, con coloraciones de F, G y H. Por otra parte, conforme la pureza aumenta hasta IF y el diamante se vuelve incoloro (véase la Figura No. 2), los datos se empiezan a volver menos densos.
+
+De acuerdo con Tiwari(2019), los diamantes se escalan en pureza de la siguiente forma ascendente: *I1 < SI2 < SI1 < VS1 < WS2 < WS1 < IF*, donde *IF* muestra el número mínimo de inclusiones, es decir aleaciones de otros aditivos. Esto permite una mayor claridad en la translucidez de este y se califica de muy alta pureza, contrario a I1, cuyas inclusiones asemejan fisuras o distorciones internas.
+Este autor también cita una teoría sumamente interesante, la cual es que la pureza del material es dependiente de la coloración de este(véase la escala de la Figura No. 2), en el cual hace referencia a que los diamantes incoloros como el tipo J, corresponden a los más raros y de más alta pureza, es por ello que son tan poco comunes de observar, y por consiguiente es que la manta de datos podría tener tan pocos registros en ese ámbito.
+
+
+## Figura No. 2. Escala de coloración de diamantes
+
+![Figura No. 2. Escala de coloración de diamantes](C:\Users\rober\OneDrive\Documents\TEC\IX Semestre\Tópicos Avanzados de Producción\Tareas\Tarea 2\T2_Roberto_Aguilar\images\escalaC.png)
+**Fuente: LIBÉLULA, 2020**
+
+
+
+
+# Prueba de Hipótesis 1
+
+Teniendo una perspectiva clara acerca de la supuesta relación de pureza y color se comprobará estadísticamente. A primera vista se observan la distribución para cada una de las coloraciones mesuaradas con respecto a la *Pureza* medida en Quilates, en la cual se pueden apreciar que las medianas en Quilates tienden a aumentar al incrementar conforme el diamante decrece en coloración.
+
+
+## Figura No. 3. Box-plot de Colores contra Pureza(Quilates)
+
+```{r , echo=FALSE}
+ggplot() + geom_boxplot(data = diamonds, aes(x = Color, y = Quilates, fill = Color)) + scale_fill_brewer(palette="Oranges", direction = -1)
+```
+
+Aprovechando dicha observación se tomarán las coloraciones F y G que poseen  distribuciones muy similares para confeccionar una prueba de hipótesis, con la finalidad de comprabar si las medias de ambos son iguales o si su diferencia excede a 0, para ello se realizará una prueba t de la diferencia de las dos muestras, definida a continuación.
+
+![](C:\Users\rober\OneDrive\Documents\TEC\IX Semestre\Tópicos Avanzados de Producción\Tareas\Tarea 2\T2_Roberto_Aguilar\images\h1.png)
+
+Ahora se procederá a confeccionar la Prueba T de dos muestras
+
+Tenemos el grupo de Diamantes G con sus respectivos datos de Quilates
+```{r}
+g <- diamonds$Quilates[diamonds$Color=="G"] 
+```
+
+Tenemos el grupo de Diamantes F con sus respectivos datos de Quilates
+```{r}
+f <- diamonds$Quilates[diamonds$Color=="F"]
+```
+
+Ahora se ejecuta la prueba
+```{r}
+t.test(x = g, y = f, alternative = "greater", conf.level = 0.95)
+```
+
+Tomando en consideración un intervalo de confianza del 95%, se logra concluir que la diferencia entre el Color G y el Color F es superior a 0, puesto que se rechazó la hipótesis nula. Por lo tanto puede decirse que el argumento establecido por Tiwari(2019) es verdadero, a mayor pureza mayor es la transparencia del diamante. Esto se concluye al observa un *valor p* inferior al *0.05*.
+
+
+
+
+
+
+# Prueba de Hipótesis 2
+
+Otro aspecto a considerar consiste en la relación existente entre los *quilates*, es decir, la pureza de los diamantes, con el *precio* que le es asignado. Es por ello que mediante una prueba de correlacion puede confeccionarse un analisis que permita conocer si conforme aumenta la pureza de lo diamantes, aumenta el precio de estos.
+La prueba esta definida por:
+
+![](C:\Users\rober\OneDrive\Documents\TEC\IX Semestre\Tópicos Avanzados de Producción\Tareas\Tarea 2\T2_Roberto_Aguilar\images\h2.png)
+
+Teniendo claras las hipótesis planteadas se procede a la siguiente prueba, mediante el método de Pearson:
+```{r}
+cor.test(x = diamonds$Quilates, y = diamonds$Precio, alternative = "two.sided", method = "pearson")
+```
+
+Considerando un valor p inferior a 0.05 se establece que el coeficiente de correlación de pearson es distinto a cero, es decir, que sí existe una relación lineal entre los Quilates y el Precio de los mismos.
+Así, se observa que dicho coeficiente de correlación es bastante alto, indicando que existe una relación fuerte por cuanto aumentan los *Quilates* por ende también su *Precio* de forma lineal, dado que el coeficiente es equivalente a *0.92*.
+Para facilitar el entendimiento de su relación el siguiente gráfico muestra el comportamiento de ambas variables con la densidad adjunta.
+
+
+## Figura No. 4. Correlación y dispersión de datos de Precio contra Pureza(Quilates)
+
+```{r , echo=FALSE}
+cor_data <- data.frame(diamonds$Quilates, diamonds$Precio)
+chart.Correlation(cor_data)
+```
+
+
+
+# Conclusiones
+
+-Conforme aumenta la incoloridad de un diamante su pureza incrementa y por consiguiente se ve reflejado en la claridad de este al minimizar sus incluiones visibles, permitiendo una mayor translucidez.
+
+-De acuerdo con la segunda prueba de hipótesis se concluye a partir de la muestra de diamantes que la pureza de los mismo se ve reflejada linealmente en su precio.
+
+
+
+# Referencias Bibliográficas
+
+LIBÉLULA. (2020).*¿Cómo comprar un diamante?*. Recuperado de: https://www.libelulaporsofia.com/pages/como-comprar-un-diamante.
+
+Tiwari, M. (2019). *Claridad del Diamante: Educación y consejos de compra*. Blue Nile. Recuperado de: https://www.bluenile.com/pr/education/diamonds/clarity.
+
+
+
+
+
+
+

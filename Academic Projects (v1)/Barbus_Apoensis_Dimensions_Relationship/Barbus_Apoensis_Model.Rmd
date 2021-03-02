@@ -1,0 +1,199 @@
+---
+title: "Relación de medidas de Barbus Apoensis mediante, Regresión Lineal Múltiple"
+author: "Roberto Andrés Aguilar Quesada"
+date: "3/6/2020"
+output: 
+  html_document:
+    df_print: paged
+    theme: journal
+    highlight: tango
+---
+
+```{r setup, include=FALSE, echo = FALSE}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(psych)
+library(regressoR)
+library(formattable)
+
+datos <- read.table("DatosPeces.txt",header=T,dec=",")
+attach(datos)
+
+
+# Función de Índices Generales
+general_indices <- function (real, prediccion) 
+{RMSE <- sqrt(sum((real - prediccion)^2)/length(prediccion))
+    MAE <- sum(abs(real - prediccion))/length(prediccion)
+    RE <- sum(abs(real - prediccion))/sum(abs(real))
+    COR <- as.numeric(cor(real, prediccion))
+    COR <- ifelse(is.na(COR), 0, COR)
+    return(list(Raiz.Error.Cuadratico = RMSE, Error.Absoluto = MAE, 
+        Error.Relativo = RE, Correlacion = COR))}
+
+
+```
+
+
+```{r, echo=FALSE}
+names(datos)[4] <-"Anal_Fin"
+names(datos)[5] <-"Dorsal_Fin"
+
+#Se elimina los datos vacios NA
+peces <- na.omit(datos)
+peces
+```
+
+
+# Selección de variables explicativas y variable dependiente
+
+Inicialmente tenemos la manta de datos de Peces, la cual consta de 12 variables de las cuales dos de ellas corresponden a categóricas, una de ellas denominada con datos discretos, y el resto son continuos. Todas ellas sirven para caracterizar distintos peces tomados de una población, en la que se tenían peces de la especie *Barbus Apoensis* y *Exu*.
+Es por ello que se quiere tomar como referencia las medidas de aleta anal, aleta dorsal, cabeza, cola y frente, con la razón de lograr describir una variable, que en este caso corresponde a la dependiente que tomará el valor de *Total* o longitud total del pez.
+La razón por la cual se quiere definir si mediante dichas variables se puede definir el tamaño total del pez, es porque por sentido común a simple vista dicho supuesto debería asumirse como cierto, es decir debería existir una fuerte relación que caracterice el tamaño del pez dada las medidas de cada parte, pero el principal propósito es analizarlo estadísticamente y comprobarlo. A nivel descriptivo y visual se tiene la Figura No.1, la cual muestra las variables a modelar.
+
+![Figura No. 1. Partes de un Pez](C:\Users\rober\OneDrive\Documents\TEC\IX Semestre\Tópicos Avanzados de Producción\Tareas\Tarea 3\T3_Roberto_Aguilar\Images\Fish_parts1.png)
+
+No obtante esta decisión fue tomada observando la Figura No.2, la cual para efecto de análisis por medio de correlación lineal es considerablemente efectiva, dados sus coeficientes de correlación que presentan valores bastante altos entre sí y su normalidad tambíén se observa de buena forma.
+
+```{r, echo=FALSE}
+pairs.panels(peces[-c(1,3,9,10,11,12)],bg=c("red","yellow")[peces$Species],
+        pch=21)
+```
+
+Figura No. 2. Panel de Correlación Lineal entre variables
+
+Un punto que debe considerarse es la homogeneidad de los datos porque si observamos la gráfica de relaciones de Aleta Anal vs Longitud Total, y la de Cabeza vs Longitud Total, observamos que exiten outliers o valores atípicos en la especie Apo que pueden alterar la homogeneidad, lo que indica que la dispersión no es igual para cada valor en términos de su error. 
+
+# Seccionamiento de la base de datos 
+
+Separamos la base de datos en dos, una para el modelo con el 90% de ellos y la nombramos como *datos.modelo*
+```{r}
+#Primero se toma la muestra del 90%
+particion <- sample(1:nrow(peces),size = nrow(peces)*0.9, replace = FALSE)
+
+#Se selecciona el 90% de los datos de peces
+datos.modelo <- peces[particion,]
+```
+
+La otra para efectos de prueba con el 10% de ellos y la nombramos como *datos.prueba*
+```{r}
+#Se selecciona solamente el restante de la muestra del 90%
+datos.prueba<- peces[-particion,]
+```
+
+Revisamos que en los seccionamientos estén presentes ambas especies, primero revisamos la especie *Apo*
+```{r}
+#Apo en datos.modelo
+"apo" %in% datos.modelo$Species
+
+#Apo en datos.prueba
+"apo" %in% datos.prueba$Species
+```
+
+Ahora revisamos la especie *Exu*
+```{r}
+#Exu en datos.modelo
+"exu" %in% datos.modelo$Species
+
+#Exu en datos.prueba
+"exu" %in% datos.prueba$Species
+```
+
+
+
+
+# Modelo 1: Especies Apo y Exu unificadas
+Se tiene como modelo:
+```{r, echo=FALSE}
+modelo1 <- lm(`Total`~Anal_Fin+Dorsal_Fin+Head+Tail+Front, data = datos.modelo)
+summary(modelo1)
+```
+Como el estadístico F en inferior al 95% de confianza, quiere decir que al menos una de las variables explicativas influye en el tamaño total del pez. En que este caso corresponden a la aleta Dorsal, a la cola y a su frente.
+
+## Predicción de Modelo 1
+```{r, echo=FALSE}
+predict1 <- predict(modelo1, datos.prueba)
+predict1
+```
+
+```{r, echo=FALSE}
+# Indicadores de Modelo 1
+index1 <- general_indices(datos.prueba[,'Total'], predict1)
+```
+
+
+
+# Modelo 2: Especie Apo exclusivamente 
+Se tiene como modelo:
+```{r, echo=FALSE}
+modelo2 <- lm(`Total`~Anal_Fin+Dorsal_Fin+Head+Tail+Front, data = subset(datos.modelo, Species == "apo"))
+summary(modelo2)
+```
+
+Como el estadístico F en inferior al 95% de confianza, quiere decir que al menos una de las variables explicativas influye en el tamaño total del pez. En que este caso corresponden a la aleta Dorsal y a su cola.
+
+
+## Predicción de Modelo 2
+```{r, echo=FALSE}
+predict2 <- predict(modelo2, datos.prueba)
+predict2
+```
+
+```{r, echo=FALSE}
+index2 <- general_indices(datos.prueba[,'Total'], predict2)
+```
+
+
+# Modelo 3: Especie Exu exclusivamente
+Se tiene como modelo:
+```{r, echo=FALSE}
+modelo3 <- lm(`Total`~Anal_Fin+Dorsal_Fin+Head+Tail+Front, data = subset(datos.modelo, Species == "exu"))
+summary(modelo3)
+```
+
+Como el estadístico F en inferior al 95% de confianza, quiere decir que al menos una de las variables explicativas influye en el tamaño total del pez. En que este caso corresponden a la aleta Dorsal y a su frente.
+
+
+## Predicción de Modelo 3
+```{r, echo=FALSE}
+predict3 <- predict(modelo3, datos.prueba)
+predict3
+```
+
+```{r, echo=FALSE}
+index3 <- general_indices(datos.prueba[,'Total'], predict3)
+```
+
+
+Tabla No. 1. Resumen de Indices obtenidos a través de los 3 modelos de regresión
+```{r, echo=FALSE}
+resumen.index <- data.frame(Indice = c("Raíz de Error Cuadrático Medio","Error Absoluto", "Error Relativo","Correlación"), Modelo_1 = c(index1$Raiz.Error.Cuadratico, index1$Error.Absoluto, index1$Error.Relativo, index1$Correlacion),
+                            Modelo_2 = c(index2$Raiz.Error.Cuadratico, index2$Error.Absoluto, index2$Error.Relativo, index2$Correlacion),
+                            Modelo_3 = c(index3$Raiz.Error.Cuadratico, index3$Error.Absoluto, index3$Error.Relativo, index3$Correlacion))
+formattable(resumen.index)
+```
+
+## Interpretación de errores
+
+Inicialmente previo a decidir el modelo que proporciona los mejores resultados de predicción, debe conocerse lo que nos indica cada uno de los errores.
+
+*Raíz del Error Cuadrático Medio*
+
+Corresponde al cálculo de la desviación que existe entre los datos observados y el valor de predicción, es decir aquel que establece la linea de ajuste. Base un sistema muestral como el presente, este toma un valor residual y su indicador define valor no negativos, donde el ajuste perfecto se denota con un *cero*, es decir que entre más alto es el valor menor es la intencidad de la relación.
+
+
+*Error Absoluto*
+
+Corresponde a la diferencia entre aquel valor que se asume como real, en otras palabras la media y el observado. Sin embargo en cierta ocasiones no representa una perpectiva clara, puesto a que se puede ver influido por valores atípicos que generen distorsiones en linea de ajuste.
+
+
+*Error Relativo*
+
+Corresponde a un valor porcentual que representa el porcentaje de distorsión de un modelo con respecto a el valor "real".
+
+
+
+## Escogencia del mejor modelo predicción
+
+El modelo de mejor ajuste corresponde al Modelo 3, aquel que incluye a la especie *Exu* exclusivamente. Esto pudo deberse al hecho de que la mayoría de datos atípicos mostrados en la Figura No.2 correspondían a especies *Apo*, por lo que al ser excluidas en dicho modelo no generó afectación alguna en el Error Absoluto y por consiguiente en el relativo que tiene un valor de 0% aproximadamente, ya que no generó distorsiones en el valor medio, contrario a lo visto en el Modelo 1 y 2. 
+Al saber esto la diferencia entre los valores observados y los predecidos fue claramente menor en el modelo 1 ya que, se encuentran mejor ajustados y se justifica por medio del valor de su Raíz de Error Cuadrático Medio.

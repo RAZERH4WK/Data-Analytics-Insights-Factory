@@ -1,0 +1,140 @@
+---
+title: "Regresión Dinámica"
+author: "Equipo 1"
+date: "5/25/2020"
+output: 
+  prettydoc::html_pretty:
+    theme: tactile
+---
+
+```{r setup, include=FALSE}
+library(fpp2) # Datasets packages
+library(ggplot2)
+library(forecast)
+library(xts)
+library(astsa) # Extras de analisis estadistico de series de tiempo
+
+# Tema
+my_theme1 <- theme(rect = element_blank(), axis.line = element_line(color = "#DADADA"), 
+                   axis.title = element_text(size = 10, color = "#505050", face = "italic"), 
+                   axis.text = element_text(size = 9, color = "#505050"),
+                   title = element_text(size = 13, color = "black"),
+                   panel.grid.major.y = element_line(color = "#F3F3F3"),
+                   legend.position = "top", legend.text = element_text(size = 9),
+                   legend.title = element_text(size = 10, face = "bold"), legend.direction = "horizontal",
+                   plot.caption = element_text(color = "black", size = "8", hjust = 0))
+
+```
+
+## Ejemplo de Modelo de Consumo acorde a variable exógena de ingresos
+
+Este es un ejemplo de datos estacionarios donde la media y la varianza se mantienen relativamente constantes en el tiempo.
+
+```{r, echo = FALSE}
+
+autoplot(uschange[,1:2], facets=TRUE) +
+  xlab("Año") + ylab("") +
+  ggtitle("Cambio cuatrimestral de consumo con respecto a ingresos en US") + my_theme1
+
+```
+
+
+Ahora lo ajustamos a un modelo en donde no hay que especificar una diferencia en el argumento `order` puesto a que ya es estacionaria.
+
+```{r, echo = FALSE}
+(modelo <- auto.arima(uschange[,"Consumption"],
+                   xreg=uschange[,"Income"]))
+
+
+
+
+```
+
+Tenemos un modelo definido por
+
+![ ](C:\Users\rober\Repositories\Insights_Factory\Prueba_Reg_Din\reg1.PNG)
+
+Observamos que los residuos son de ruido blanco, tal como debe cumplirse para elaborar predicciones.
+
+```{r, echo = FALSE}
+
+cbind("Regression Errors" = residuals(modelo, type="regression"),
+      "ARIMA errors" = residuals(modelo, type="innovation")) %>%
+  autoplot(facets=TRUE) + my_theme1
+
+
+```
+
+Con una vista mas detallada con grafica de autocorrelacion, probamos la aleatoriedad de los retardos.
+
+`checkresiduals(modelo)`
+
+```{r, echo=FALSE}
+checkresiduals(modelo)
+```
+
+Como podemos ver se acepta la hipotesis nula por lo que si es de ruido blanco.
+
+
+
+## Ejemplo de consumo electrico acorde a variable exogena de Temperatura ambiental máxima diaria
+
+Inicialmente estudiamos la correlación de los datos tanto de consumo eléctrico como de temperatura.
+
+```{r, warning=FALSE}
+elec2 <- cbind(as.data.frame(elecdaily[,"Temperature"]), as.data.frame(elecdaily[,"Demand"]))
+names(elec2) <- c("Temperature", "Demand")
+ggplot(elec2, aes(x = elec2$Temperature, y = elec2$Demand)) + geom_point() +
+ggtitle("Demanda electrica versus Temperatura maxima diaria en Victoria, Australia 2014") + 
+  labs(x = "Temperatura maxima diaria", y = "Demanda electrica") + 
+  my_theme1
+```
+
+
+
+Vemos el comportamiento individual tanto de los ingresos como del consumo.
+
+```{r, echo = FALSE}
+cbind("Temperatura" = elecdaily[,"Temperature"], "Demanda Electrica" = elecdaily[,"Demand"]) %>%
+  autoplot(facets=TRUE) + my_theme1
+
+```
+
+
+Para corroborar hacemos la prueba de Ljung-Box
+
+En este caso implementaremos las variables exógenas: Temperatura, Temperatura al cuadrado y Día laboral.
+
+`checkresiduals(modelo2)`
+
+```{r, echo = FALSE}
+xreg <- cbind(MaxTemp = elecdaily[, "Temperature"],
+              MaxTempSq = elecdaily[, "Temperature"]^2,
+              Workday = elecdaily[, "WorkDay"])
+modelo2 <- auto.arima(elecdaily[, "Demand"], xreg = xreg)
+checkresiduals(modelo2)
+```
+
+Ahora hacemos una predicción.
+
+```{r}
+fcast <- forecast(modelo2,
+                  xreg = cbind(MaxTemp=rep(26,14), MaxTempSq=rep(26^2,14),
+                               Workday=c(0,1,0,0,1,1,1,1,1,0,0,1,1,1)))
+autoplot(fcast) + ylab("Demanda Electrica (GW)") + my_theme1
+```
+
+
+Ahora, ¿Cómo se apreciaría el modelo sin las variables exogenas de por medio?
+
+```{r}
+modelo3 <- auto.arima(elecdaily[, "Demand"])
+
+fcast <- forecast(modelo3)
+autoplot(fcast) + ylab("Demanda Electrica sin variable de temperatura (GW)") + my_theme1
+```
+
+
+
+
+
