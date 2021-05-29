@@ -1,0 +1,575 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Laboratorio 1, Parte 1},
+  pdfauthor={Roberto Aguilar},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Laboratorio 1, Parte 1}
+\author{Roberto Aguilar}
+\date{5/1/2021}
+
+\begin{document}
+\maketitle
+
+\hypertarget{paso-3}{%
+\section{Paso 3}\label{paso-3}}
+
+Primero accedemos a los discursos en formato .txt, que se encuentran
+almacenados en el directorio
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Direccion de documentos en directorio}
+
+\NormalTok{stevepath }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}SteveJobsStanford.txt\textquotesingle{}}
+\NormalTok{capath }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}CATraspasoPresidencial.txt\textquotesingle{}}
+\NormalTok{lgpath }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}LGSTraspasoPresidencial.txt\textquotesingle{}}
+
+\CommentTok{\# Lectura de documentos en formato .txt}
+
+\NormalTok{text\_steve }\OtherTok{\textless{}{-}} \FunctionTok{readLines}\NormalTok{(stevepath)}
+\NormalTok{text\_ca }\OtherTok{\textless{}{-}} \FunctionTok{readLines}\NormalTok{(capath)}
+\NormalTok{text\_lg }\OtherTok{\textless{}{-}} \FunctionTok{readLines}\NormalTok{(lgpath)}
+\end{Highlighting}
+\end{Shaded}
+
+Ahora creamos una lista de documentos, donde cada doumento tendrá la
+estructura de un párrafo de discurso mediante la función
+\textbf{Corpus()}, de text mining
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# listado de documentos en discurso de Steve Jobs y ambos presidentes de Costa Rica}
+
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{Corpus}\NormalTok{(}\FunctionTok{VectorSource}\NormalTok{(text\_steve))}
+
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{Corpus}\NormalTok{(}\FunctionTok{VectorSource}\NormalTok{(text\_ca))}
+
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{Corpus}\NormalTok{(}\FunctionTok{VectorSource}\NormalTok{(text\_lg))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{paso-4}{%
+\section{Paso 4}\label{paso-4}}
+
+Ahora, nuestro interés está en insertar los datos de la forma más limpia
+posible. Como vimos anteriormente en el discurso de Steve Jobs, ciertos
+caracteres especiales fueron sustituídos por un ``?'' pero ahora previo
+al análisis necesitaremos transformarlos en espacios en blanco para
+hacer más eficiente el proceso. Para ello usaremos la función tm\_map de
+text mining.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Se crea un tranformador de contenido que sustituye el caracter especial x que insertemos por un string de un espacio en blanco}
+
+\NormalTok{toSpace }\OtherTok{\textless{}{-}} \FunctionTok{content\_transformer}\NormalTok{(}\ControlFlowTok{function}\NormalTok{ (x , pattern ) }\FunctionTok{gsub}\NormalTok{(pattern, }\StringTok{" "}\NormalTok{, x))}
+
+\CommentTok{\# Sustituye por cada vocal}
+
+\NormalTok{toa }\OtherTok{\textless{}{-}} \FunctionTok{content\_transformer}\NormalTok{(}\ControlFlowTok{function}\NormalTok{ (x , pattern ) }\FunctionTok{gsub}\NormalTok{(pattern, }\StringTok{"a"}\NormalTok{, x)) }
+\NormalTok{toe }\OtherTok{\textless{}{-}} \FunctionTok{content\_transformer}\NormalTok{(}\ControlFlowTok{function}\NormalTok{ (x , pattern ) }\FunctionTok{gsub}\NormalTok{(pattern, }\StringTok{"e"}\NormalTok{, x)) }
+\NormalTok{toi }\OtherTok{\textless{}{-}} \FunctionTok{content\_transformer}\NormalTok{(}\ControlFlowTok{function}\NormalTok{ (x , pattern ) }\FunctionTok{gsub}\NormalTok{(pattern, }\StringTok{"i"}\NormalTok{, x))}
+\NormalTok{too }\OtherTok{\textless{}{-}} \FunctionTok{content\_transformer}\NormalTok{(}\ControlFlowTok{function}\NormalTok{ (x , pattern ) }\FunctionTok{gsub}\NormalTok{(pattern, }\StringTok{"o"}\NormalTok{, x)) }
+\NormalTok{tou }\OtherTok{\textless{}{-}} \FunctionTok{content\_transformer}\NormalTok{(}\ControlFlowTok{function}\NormalTok{ (x , pattern ) }\FunctionTok{gsub}\NormalTok{(pattern, }\StringTok{"u"}\NormalTok{, x)) }
+
+\CommentTok{\# Sustituye por letra ñ}
+
+\NormalTok{ton }\OtherTok{\textless{}{-}} \FunctionTok{content\_transformer}\NormalTok{(}\ControlFlowTok{function}\NormalTok{ (x , pattern ) }\FunctionTok{gsub}\NormalTok{(pattern, }\StringTok{"ñ"}\NormalTok{, x)) }
+
+\CommentTok{\# Aplicamos la transfomación para cada listado de documentos}
+
+\CommentTok{\# Steve Jobs}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, toSpace, }\StringTok{"/"}\NormalTok{)}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, toSpace, }\StringTok{"@"}\NormalTok{)}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, toSpace, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{|"}\NormalTok{)}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, toSpace, }\StringTok{"Â€º"}\NormalTok{)}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, toSpace, }\StringTok{"Ã¿"}\NormalTok{)}
+
+\CommentTok{\# Luis Guillermo Solis}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, toSpace, }\StringTok{"/"}\NormalTok{)}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, toSpace, }\StringTok{"@"}\NormalTok{)}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, toSpace, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{|"}\NormalTok{)}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, toa, }\FunctionTok{c}\NormalTok{(}\StringTok{"Âš"}\NormalTok{,}\StringTok{"Â š"}\NormalTok{))}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, toe, }\FunctionTok{c}\NormalTok{(}\StringTok{"Â€"}\NormalTok{, }\StringTok{"Â€š"}\NormalTok{))}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, toi, }\FunctionTok{c}\NormalTok{(}\StringTok{"Â¡"}\NormalTok{, }\StringTok{"Â¡š"}\NormalTok{))}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, too, }\FunctionTok{c}\NormalTok{(}\StringTok{"Â¢"}\NormalTok{,}\StringTok{"Â¢š"}\NormalTok{))}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, tou, }\FunctionTok{c}\NormalTok{(}\StringTok{"Â£"}\NormalTok{,}\StringTok{"Â£š"}\NormalTok{))}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, ton, }\StringTok{"Â¤"}\NormalTok{) }
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, toe, }\StringTok{"â€š"}\NormalTok{) }
+
+\CommentTok{\# Carlos Alvarado}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, toSpace, }\StringTok{"/"}\NormalTok{)}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, toSpace, }\StringTok{"@"}\NormalTok{)}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, toSpace, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{|"}\NormalTok{)}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, toSpace, }\StringTok{"“"}\NormalTok{)}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, toSpace, }\StringTok{"¡"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Primero hacemos ajustes al discurso de Steve Jobs
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Convertir el texto en lower case}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, }\FunctionTok{content\_transformer}\NormalTok{(tolower))}
+\CommentTok{\# Eliminar numeros}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, removeNumbers)}
+\CommentTok{\# Eliminar stopwords en ingles}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, removeWords, }\FunctionTok{stopwords}\NormalTok{(}\StringTok{"english"}\NormalTok{))}
+\CommentTok{\# Eliminar stopwords personalizados}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, removeWords, }\FunctionTok{c}\NormalTok{(}\StringTok{"m"}\NormalTok{, }\StringTok{"ll"}\NormalTok{, }\StringTok{"ve"}\NormalTok{, }\StringTok{"s"}\NormalTok{))}
+\CommentTok{\# Eliminar puntuaciones}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, removePunctuation)}
+\CommentTok{\# Elimnar espacios extra en blanco}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, stripWhitespace)}
+\CommentTok{\# Eliminamos el caracter especial}
+\NormalTok{docs\_st }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_st, toSpace, }\StringTok{"ï»¿"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Lo hacemos para el discurso de Luis Guillermo Solis
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Convertir el texto en lower case}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, }\FunctionTok{content\_transformer}\NormalTok{(tolower))}
+\CommentTok{\# Eliminar numeros}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, removeNumbers)}
+\CommentTok{\# Eliminar stopwords en ingles}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, removeWords, }\FunctionTok{stopwords}\NormalTok{(}\StringTok{"spanish"}\NormalTok{))}
+\CommentTok{\# Eliminar puntuaciones}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, removePunctuation)}
+\CommentTok{\# Elimnar espacios extra en blanco}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, stripWhitespace)}
+\CommentTok{\# Ajustamos la "a + espacio" }
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, toa, }\StringTok{"â "}\NormalTok{)}
+\CommentTok{\# Eliminamos el caracter especial}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, toSpace, }\StringTok{"ï»¿"}\NormalTok{)}
+\CommentTok{\# Eliminar stopwords personalizados}
+\NormalTok{docs\_lg }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_lg, removeWords, }\FunctionTok{c}\NormalTok{(}\StringTok{"si"}\NormalTok{, }\StringTok{"ser"}\NormalTok{, }\StringTok{"sino"}\NormalTok{, }\StringTok{"cada"}\NormalTok{, }\StringTok{"tras"}\NormalTok{, }\StringTok{"la"}\NormalTok{, }\StringTok{"el"}\NormalTok{, }\StringTok{"las"}\NormalTok{ , }\StringTok{"los"}\NormalTok{, }\StringTok{"mas"}\NormalTok{, }\StringTok{"m�s"}\NormalTok{ ,                                       }\StringTok{"que"}\NormalTok{, }\StringTok{"con"}\NormalTok{, }\StringTok{"por"}\NormalTok{, }\StringTok{"del"}\NormalTok{, }\StringTok{"una"}\NormalTok{, }\StringTok{"como"}\NormalTok{, }\StringTok{"para"}\NormalTok{, }\StringTok{"sus"}\NormalTok{, }\StringTok{"cuando"}\NormalTok{, }\StringTok{"ese"}\NormalTok{, }\StringTok{"esa"}\NormalTok{,}
+                                          \StringTok{"esta"}\NormalTok{, }\StringTok{"que,"}\NormalTok{, }\StringTok{"pero"}\NormalTok{, }\StringTok{"sin"}\NormalTok{, }\StringTok{"sino"}\NormalTok{,}\StringTok{"mas"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+Y también lo hacemos para el discurso de Carlos Alvarado
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Convertir el texto en lower case}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, }\FunctionTok{content\_transformer}\NormalTok{(tolower))}
+\CommentTok{\# Eliminar numeros}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, removeNumbers)}
+\CommentTok{\# Eliminar stopwords en ingles}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, removeWords, }\FunctionTok{stopwords}\NormalTok{(}\StringTok{"spanish"}\NormalTok{))}
+\CommentTok{\# Eliminar stopwords personalizados}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, removeWords, }\FunctionTok{c}\NormalTok{(}\StringTok{"si"}\NormalTok{, }\StringTok{"ser"}\NormalTok{, }\StringTok{"sino"}\NormalTok{, }\StringTok{"cada"}\NormalTok{, }\StringTok{"tras"}\NormalTok{, }\StringTok{"la"}\NormalTok{, }\StringTok{"el"}\NormalTok{, }\StringTok{"las"}\NormalTok{ , }\StringTok{"los"}\NormalTok{, }\StringTok{"mas"}\NormalTok{, }\StringTok{"m�s"}\NormalTok{ ,                                       }\StringTok{"que"}\NormalTok{, }\StringTok{"con"}\NormalTok{, }\StringTok{"por"}\NormalTok{, }\StringTok{"del"}\NormalTok{, }\StringTok{"una"}\NormalTok{, }\StringTok{"como"}\NormalTok{, }\StringTok{"para"}\NormalTok{, }\StringTok{"sus"}\NormalTok{, }\StringTok{"cuando"}\NormalTok{, }\StringTok{"ese"}\NormalTok{, }\StringTok{"esa"}\NormalTok{,}
+                                          \StringTok{"esta"}\NormalTok{, }\StringTok{"que,"}\NormalTok{, }\StringTok{"pero"}\NormalTok{, }\StringTok{"sin"}\NormalTok{, }\StringTok{"sino"}\NormalTok{))}
+\CommentTok{\# Eliminar puntuaciones}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, removePunctuation)}
+\CommentTok{\# Elimnar espacios extra en blanco}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, stripWhitespace)}
+\CommentTok{\# Ajustamos la "a + espacio" }
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, toa, }\StringTok{"â "}\NormalTok{)}
+\CommentTok{\# Eliminamos el caracter especial}
+\NormalTok{docs\_ca }\OtherTok{\textless{}{-}} \FunctionTok{tm\_map}\NormalTok{(docs\_ca, toSpace, }\StringTok{"ï»¿"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{paso-6}{%
+\section{Paso 6}\label{paso-6}}
+
+Ahora creamos una tabla matriz con la frecuencia de aparacion de
+palabras para cada discurso
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Steve Jobs}
+\NormalTok{dtmst }\OtherTok{\textless{}{-}} \FunctionTok{TermDocumentMatrix}\NormalTok{(docs\_st)}
+\NormalTok{mst }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(dtmst)}
+\NormalTok{vst }\OtherTok{\textless{}{-}} \FunctionTok{sort}\NormalTok{(}\FunctionTok{rowSums}\NormalTok{(mst),}\AttributeTok{decreasing=}\ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{dst }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{word =} \FunctionTok{names}\NormalTok{(vst),}\AttributeTok{freq=}\NormalTok{vst)}
+\FunctionTok{head}\NormalTok{(dst, }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##            word freq
+## life       life   17
+## college college   14
+## one         one    9
+## years     years    9
+## apple     apple    9
+## just       just    8
+## never     never    8
+## dropped dropped    7
+## months   months    7
+## later     later    7
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Luis Guillermo}
+\NormalTok{dtmlg }\OtherTok{\textless{}{-}} \FunctionTok{TermDocumentMatrix}\NormalTok{(docs\_lg)}
+\NormalTok{mlg }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(dtmlg)}
+\NormalTok{vlg }\OtherTok{\textless{}{-}} \FunctionTok{sort}\NormalTok{(}\FunctionTok{rowSums}\NormalTok{(mlg),}\AttributeTok{decreasing=}\ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{dlg }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{word =} \FunctionTok{names}\NormalTok{(vlg),}\AttributeTok{freq=}\NormalTok{vlg)}
+\FunctionTok{head}\NormalTok{(dlg, }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  word freq
+## democracia democracia   13
+## pueblo         pueblo   13
+## pais             pais   12
+## rica             rica   11
+## costa           costa   10
+## nacional     nacional    9
+## tambien       tambien    9
+## gobierno     gobierno    8
+## sociedad     sociedad    8
+## solo             solo    8
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Carlos Alvarado}
+\NormalTok{dtmca }\OtherTok{\textless{}{-}} \FunctionTok{TermDocumentMatrix}\NormalTok{(docs\_ca)}
+\NormalTok{mca }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(dtmca)}
+\NormalTok{vca }\OtherTok{\textless{}{-}} \FunctionTok{sort}\NormalTok{(}\FunctionTok{rowSums}\NormalTok{(mca),}\AttributeTok{decreasing=}\ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{dca }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{word =} \FunctionTok{names}\NormalTok{(vca),}\AttributeTok{freq=}\NormalTok{vca)}
+\FunctionTok{head}\NormalTok{(dca, }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                          word freq
+## pais                     pais   22
+## personas             personas   19
+## debemos               debemos   17
+## bienestar           bienestar   14
+## bicentenario     bicentenario   14
+## costa                   costa   14
+## rica                     rica   14
+## educacion           educacion   13
+## todas                   todas   11
+## costarricenses costarricenses   10
+\end{verbatim}
+
+\hypertarget{paso-7}{%
+\section{Paso 7}\label{paso-7}}
+
+Procedemos a ilustrar con un Wordcloud para cada discurso
+
+\hypertarget{discurso-de-steve-jobs}{%
+\subsubsection{Discurso de Steve Jobs}\label{discurso-de-steve-jobs}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+\FunctionTok{wordcloud}\NormalTok{(}\AttributeTok{words =}\NormalTok{ dst}\SpecialCharTok{$}\NormalTok{word, }\AttributeTok{freq =}\NormalTok{ dst}\SpecialCharTok{$}\NormalTok{freq, }\AttributeTok{min.freq =} \DecValTok{1}\NormalTok{, }\AttributeTok{max.words=}\DecValTok{100}\NormalTok{,}
+          \AttributeTok{random.order=}\ConstantTok{FALSE}\NormalTok{, }\AttributeTok{rot.per=}\FloatTok{0.35}\NormalTok{, }\AttributeTok{colors=}\FunctionTok{brewer.pal}\NormalTok{(}\DecValTok{8}\NormalTok{, }\StringTok{"Dark2"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Laboratorio-1_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\hypertarget{discurso-de-luis-guillermo-solis}{%
+\subsubsection{Discurso de Luis Guillermo
+Solis}\label{discurso-de-luis-guillermo-solis}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+\FunctionTok{wordcloud}\NormalTok{(}\AttributeTok{words =}\NormalTok{ dlg}\SpecialCharTok{$}\NormalTok{word, }\AttributeTok{freq =}\NormalTok{ dlg}\SpecialCharTok{$}\NormalTok{freq, }\AttributeTok{min.freq =} \DecValTok{1}\NormalTok{, }\AttributeTok{max.words=}\DecValTok{100}\NormalTok{,}
+          \AttributeTok{random.order=}\ConstantTok{FALSE}\NormalTok{, }\AttributeTok{rot.per=}\FloatTok{0.35}\NormalTok{, }\AttributeTok{colors=}\FunctionTok{brewer.pal}\NormalTok{(}\DecValTok{8}\NormalTok{, }\StringTok{"Dark2"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Laboratorio-1_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\hypertarget{discurso-de-carlos-alvarado}{%
+\subsubsection{Discurso de Carlos
+Alvarado}\label{discurso-de-carlos-alvarado}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+\FunctionTok{wordcloud}\NormalTok{(}\AttributeTok{words =}\NormalTok{ dca}\SpecialCharTok{$}\NormalTok{word, }\AttributeTok{freq =}\NormalTok{ dca}\SpecialCharTok{$}\NormalTok{freq, }\AttributeTok{min.freq =} \DecValTok{1}\NormalTok{, }\AttributeTok{max.words=}\DecValTok{100}\NormalTok{,}
+          \AttributeTok{random.order=}\ConstantTok{FALSE}\NormalTok{, }\AttributeTok{rot.per=}\FloatTok{0.35}\NormalTok{, }\AttributeTok{colors=}\FunctionTok{brewer.pal}\NormalTok{(}\DecValTok{8}\NormalTok{, }\StringTok{"Dark2"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Laboratorio-1_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\hypertarget{paso-8}{%
+\section{Paso 8}\label{paso-8}}
+
+Como análisis adicional, buscamos aquellas palabras que cómo mínimo
+aparezcan 4 veces dentros de cada discurso, la asociación de los
+términos
+
+\hypertarget{discurso-de-steve-jobs-1}{%
+\subsubsection{Discurso de Steve Jobs}\label{discurso-de-steve-jobs-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Frecuencia}
+\FunctionTok{findFreqTerms}\NormalTok{(dtmst, }\AttributeTok{lowfreq =} \DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "college"    "ever"       "just"       "life"       "never"     
+##  [6] "one"        "today"      "want"       "dots"       "first"     
+## [11] "story"      "dropped"    "months"     "course"     "decided"   
+## [16] "everything" "found"      "got"        "later"      "parents"   
+## [21] "put"        "started"    "best"       "didnt"      "going"     
+## [26] "looking"    "made"       "work"       "years"      "every"     
+## [31] "get"        "let"        "loved"      "turned"     "great"     
+## [36] "way"        "computer"   "connect"    "even"       "something" 
+## [41] "love"       "apple"      "company"    "fired"      "know"      
+## [46] "heart"      "next"       "now"        "dont"       "find"      
+## [51] "death"      "die"        "stay"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Asociación con "college"}
+\FunctionTok{findAssocs}\NormalTok{(dtmst, }\AttributeTok{terms =} \StringTok{"college"}\NormalTok{, }\AttributeTok{corlimit =} \FloatTok{0.3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $college
+##       minute       wanted      parents      decided        later    graduated 
+##         0.87         0.87         0.80         0.72         0.69         0.66 
+##      adopted     adoption       asking         baby   biological        birth 
+##         0.60         0.60         0.60         0.60         0.60         0.60 
+##         born          boy         call       except       father         girl 
+##         0.60         0.60         0.60         0.60         0.60         0.60 
+##    graduates         high       lawyer         list       middle       mother 
+##         0.60         0.60         0.60         0.60         0.60         0.60 
+##       papers       popped     promised      refused     relented         said 
+##         0.60         0.60         0.60         0.60         0.60         0.60 
+##       school          set         sign     strongly      student   unexpected 
+##         0.60         0.60         0.60         0.60         0.60         0.60 
+##        unwed      waiting        chose      couldnt    decisions     dropping 
+##         0.60         0.60         0.60         0.60         0.60         0.60 
+##    expensive       figure         idea     interest  interesting        money 
+##         0.60         0.60         0.60         0.60         0.60         0.60 
+##      naively         ones     required        saved      savings        scary 
+##         0.60         0.60         0.60         0.60         0.60         0.60 
+##     spending        spent     stanford         stop       taking      tuition 
+##         0.60         0.60         0.60         0.60         0.60         0.60 
+##        value workingclass        never      classes         back       course 
+##         0.60         0.60         0.53         0.50         0.46         0.44 
+##      dropped         felt     graduate        night        young        begin 
+##         0.43         0.37         0.37         0.37         0.37         0.37 
+##       entire         help       looked       pretty          see          six 
+##         0.37         0.37         0.37         0.37         0.37         0.37 
+##       months       really         time         drop 
+##         0.36         0.36         0.36         0.35
+\end{verbatim}
+
+Ahora tenemos la frecuencia de forma visual
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Grafico de barras}
+\FunctionTok{barplot}\NormalTok{(dst[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{,]}\SpecialCharTok{$}\NormalTok{freq, }\AttributeTok{las =} \DecValTok{2}\NormalTok{, }\AttributeTok{names.arg =}\NormalTok{ dst[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{,]}\SpecialCharTok{$}\NormalTok{word, }\AttributeTok{col =}\StringTok{"lightblue"}\NormalTok{, main}
+\OtherTok{=}\StringTok{"Palabras más frecuentes de Steve Jobs"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Frecuencia de las Palabras"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Laboratorio-1_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\hypertarget{discurso-de-luis-guillermo-solis-1}{%
+\subsubsection{Discurso de Luis Guillermo
+Solis}\label{discurso-de-luis-guillermo-solis-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Frecuencia}
+\FunctionTok{findFreqTerms}\NormalTok{(dtmlg, }\AttributeTok{lowfreq =} \DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "administracion"  "bienestar"       "cambio"          "capacidad"      
+##  [5] "ciudadana"       "clamor"          "constitucion"    "corrupcion"     
+##  [9] "costa"           "costarricense"   "costarricenses"  "democracia"     
+## [13] "desarrollo"      "dialogo"         "ello"            "esfuerzo"       
+## [17] "espiritu"        "forma"           "formas"          "fuerzas"        
+## [21] "gobierno"        "hace"            "hacia"           "haremos"        
+## [25] "hicieron"        "himno"           "historia"        "hoy"            
+## [29] "mandato"         "medio"           "mejor"           "nacional"       
+## [33] "nueva"           "nuevas"          "pais"            "participacion"  
+## [37] "poder"           "politica"        "politicas"       "produccion"     
+## [41] "publica"         "publicas"        "publicos"        "pueblo"         
+## [45] "puede"           "pues"            "republica"       "respeto"        
+## [49] "responsabilidad" "rica"            "riqueza"         "siempre"        
+## [53] "social"          "sociales"        "sociedad"        "solo"           
+## [57] "tambien"         "todas"           "transparencia"   "voluntad"
+\end{verbatim}
+
+Ahora tenemos la frecuencia de forma visual
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Grafico de barras}
+\FunctionTok{barplot}\NormalTok{(dlg[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{,]}\SpecialCharTok{$}\NormalTok{freq, }\AttributeTok{las =} \DecValTok{2}\NormalTok{, }\AttributeTok{names.arg =}\NormalTok{ dlg[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{,]}\SpecialCharTok{$}\NormalTok{word, }\AttributeTok{col =}\StringTok{"lightblue"}\NormalTok{, main}
+\OtherTok{=}\StringTok{"Palabras más frecuentes de Luis Guillermo Solis"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Frecuencia de las Palabras"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Laboratorio-1_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+\hypertarget{discurso-de-carlos-alvarado-1}{%
+\subsubsection{Discurso de Carlos
+Alvarado}\label{discurso-de-carlos-alvarado-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Frecuencia}
+\FunctionTok{findFreqTerms}\NormalTok{(dtmca, }\AttributeTok{lowfreq =} \DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "costarricenses"  "asi"             "bienestar"       "especial"       
+##  [5] "hoy"             "importantes"     "llevar"          "mayor"          
+##  [9] "mejor"           "mismo"           "pais"            "personas"       
+## [13] "todas"           "bicentenario"    "costa"           "lograr"         
+## [17] "mano"            "paso"            "rica"            "vida"           
+## [21] "mil"             "mujeres"         "primeros"        "solo"           
+## [25] "anos"            "tener"           "vision"          "paz"            
+## [29] "trabajo"         "construyo"       "siempre"         "ciudadania"     
+## [33] "jose"            "nacional"        "tarea"           "bien"           
+## [37] "dialogo"         "gracias"         "hacer"           "historia"       
+## [41] "voluntad"        "creacion"        "desarrollo"      "educacion"      
+## [45] "publica"         "dar"             "derechos"        "humanos"        
+## [49] "mundo"           "san"             "tambien"         "generacion"     
+## [53] "materia"         "fiscal"          "reforma"         "sistema"        
+## [57] "seguridad"       "social"          "avanzar"         "tiempo"         
+## [61] "haremos"         "sabemos"         "sera"            "trabajar"       
+## [65] "podemos"         "cambio"          "frente"          "gobierno"       
+## [69] "toda"            "norte"           "debemos"         "futuro"         
+## [73] "actuar"          "debe"            "sociedad"        "empleo"         
+## [77] "infraestructura" "salud"           "calidad"         "ruta"           
+## [81] "uso"             "manera"          "transporte"      "publico"
+\end{verbatim}
+
+Ahora tenemos la frecuencia de forma visual
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Grafico de barras}
+\FunctionTok{barplot}\NormalTok{(dca[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{,]}\SpecialCharTok{$}\NormalTok{freq, }\AttributeTok{las =} \DecValTok{2}\NormalTok{, }\AttributeTok{names.arg =}\NormalTok{ dca[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{,]}\SpecialCharTok{$}\NormalTok{word, }\AttributeTok{col =}\StringTok{"lightblue"}\NormalTok{, main}
+\OtherTok{=}\StringTok{"Palabras más frecuentes de Carlos Alvarado"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Frecuencia de las Palabras"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Laboratorio-1_files/figure-latex/unnamed-chunk-16-1.pdf}
+
+\end{document}

@@ -1,0 +1,411 @@
+---
+title: "Ejercicio práctico guiado"
+output: html_document
+author: Roberto Aguilar
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# To use pipes
+library(dplyr)
+# To manipulate strings
+library(stringr)
+# To plot correlations
+library(corrplot)
+# To plot graphs
+library(ggplot2)
+
+```
+
+El siguiente ejercicio es una guía para que el estudiante realice las tareas sobre el conjunto de datos facilitado, en cada uno de los comandos ejecutados el estudiante debe incluir la prosa con lo identificado del resultado del comando.
+
+Carga de datos Utilizar la funcion de read.csv para cargar los datos en una variable.
+
+Identificar la dimencion del conjunto de datos con la funcion "dim".
+
+```{r Lectura del archivo}
+
+# Ingestión de datos desde directorio
+datos <- read.csv("Datos.csv", header = TRUE)
+
+# Dimensión del dataframe
+dim(datos)
+
+```
+
+**Nota:**
+
+Podemos observar que, el dataframe denominado como "datos", se constituye de 690 registros(filas) y 16 atributos(columnas).
+
+
+Revisar las variables utilizando la funcion "str" 
+Aspectos a prestar cuidado:
+  -Valores faltantes 
+  -Tipos de variables 
+  -Niveles (Se muestra en las variables tipo Factor)
+  
+```{r Variables del conjunto de datos 1}
+
+# Valores Faltantes
+print("Valores Nulos por columna:")
+colSums(is.na(datos))
+
+```
+
+**Nota:**
+
+Utilizando la función colSums(), para realizar operaciones por columna, vemos que ningún atributo del dataframe posee valores nulos.
+
+```{r Variables del conjunto de datos 2}
+
+# Tipos de Variables
+print("Estructura de datos:")
+str(datos, give.attr = TRUE)
+
+```
+
+**Nota:**
+
+En su mayoría el dataframe cuenta con datos de tipo string. No obstante, tanto V3 como V8 contienen datos númericos(continuos), por otra parte V11 y V15 presentan datos enteros(discretos).
+
+```{r Variables del conjunto de datos 3}
+
+# Niveles en variables
+datos %>% sapply(levels)
+
+```
+
+**Nota:**
+
+Ningún atributo del dataframe cuenta con niveles categóricos hasta el momento.
+
+Realizar una revisión del resumen del conjunto de datos utilizando la funcion "summary". Debe indicar lo que identifica del resultado, por ejemplo diferente que muestra entre variables numéricas y categóricas
+
+```{r Resumen del conjunto de datos 4}
+
+# Estadística descriptiva
+print("Resumen de datos:")
+summary(datos)
+
+```
+
+**Nota:**
+
+*V3* -> El 50% de los datos encontrados en el atributo son menores o iguales a 2.75. La diferencia con respecto a la media es significativa, lo que quiere decir, que está siendo fuertemente influenciada por un valor superior, y efectivamente nos indican que hay un valor máximo de 28, lo cual posiblemente sea un valor atípico.
+
+*V4* -> Presenta la misma situación de V3, inclusive vemos que en este caso la media se encuentra más cerca del tercer cuartil e igualmente se debe a un valor que sesga la distribución, de 28.5. 
+
+*V15* -> Su distribución también se muestra afectada por valores atípicos. Este caso es el más grave donde inclusive, la media sobrepasa por mucho al tercer cuartil.
+
+*V11* -> Presenta el mismo comportamiento de las variables anteriores, pero lo que hace especial a esta es que el 50% de sus datos equivalen a 0.
+
+
+Sustituir los valores de la columna V16 aplicando
+  - Cambio de Nombre a Estado
+  - Sustitución de valores de "+ -> 1" y "- -> 0"
+
+```{r Manipulación de columnas}
+
+# Limpieza de espacios blancos
+datos$V16 <- datos$V16 %>% str_trim() 
+
+# Cambio de nombre a estado para V16
+datos$V16[datos$V16 == "+"] <- "1"
+datos$V16[datos$V16 == "-"] <- "0"
+
+# Cambiamos nombre a V16
+colnames(datos)[16] <- "Estado"
+
+```
+
+
+Convertir las variables a los tipos que corresponde, por ejemplo pasar a numérico o a factor utilizando las funciones "as.numeric" o "as.factor".
+
+```{r Conversión de tipos de datos}
+
+# Convertimos valores como "?" o "NA" a nulos
+datos[datos == "?" | datos == "NA"] <- NA
+
+# Tranformación de V16 a valores numéricos
+datos$Estado <- as.numeric(datos$Estado)
+
+# Tranformación de V2 a valores numéricos
+datos$V2 <- as.numeric(datos$V2)
+
+# Tranformación de V14 a valores numéricos
+datos$V14 <- as.numeric(datos$V14)
+
+# Tranformación de V5 a largo de 1
+datos$V5 <- strtrim(datos$V5, 1)
+
+# Tranformación de V6 a largo de 1
+datos$V6 <- strtrim(datos$V6, 1)
+
+# Tranformación de V7 a largo de 1
+datos$V7 <- strtrim(datos$V7, 1)
+
+# Convertimos a factores las variables categóricas
+datos$V1 <- as.factor(datos$V1)
+datos$V4 <- as.factor(datos$V4)
+datos$V5 <- as.factor(datos$V5)
+datos$V6 <- as.factor(datos$V6)
+datos$V7 <- as.factor(datos$V7)
+datos$V13 <- as.factor(datos$V13)
+
+# Convertimos V9, V10 y V12 en valores lógicos
+datos$V9[datos$V9 == "t"] <- "TRUE"
+datos$V9[datos$V9 == "f"] <- "FALSE"
+datos$V10[datos$V10 == "t"] <- "TRUE"
+datos$V10[datos$V10 == "f"] <- "FALSE"
+datos$V12[datos$V12 == "t"] <- "TRUE"
+datos$V12[datos$V12 == "f"] <- "FALSE"
+
+datos$V9 <- as.logical(datos$V9)
+datos$V10 <- as.logical(datos$V10)
+datos$V12 <- as.logical(datos$V12)
+
+```
+
+Volver a revisar las variables utilizando la funcion "str" y identificar las diferencias.
+
+```{r Variables del conjutno de datos V2}
+
+# Valores Faltantes
+print("Valores Nulos por columna:")
+colSums(is.na(datos))
+
+
+# Tipos de Variables
+print("Estructura de datos:")
+str(datos, give.attr = TRUE)
+
+
+```
+
+**Nota:**
+
+Ahora vemos que las columnas V2 y V14, que fueron tranformadas a valores numéricos, estos cuentan con 12 y 13 valores nulos respectivamente.
+
+También vemos que columnas como V1, V4, V5, V6 y V7, sí muestran valores nulos al haber sido transformados a factores. 
+
+Volver a realizar una revisión del resumen del conjunto de datos utilizando la funcion "sumamry" y identificar las diferencias.
+
+```{r Resumen del conjunto de datos V2}
+
+# Estadística descriptiva
+print("Resumen de datos:")
+summary(datos)
+
+```
+
+**Nota:**
+
+A diferencia del resumen anterior, tenemos la distrubución de dos nuevos conjuntos numéricos V2 y V14.
+
+*V2* -> El 50% de los datos encontrados en el atributo son menores o iguales a 28.46. La diferencia con respecto a la no media es significativa sin embargo, existe un valor máximo de 80.25 que la influencia.
+
+*V14* -> Su rango intercuartil es bastante alto y la media está muy influenciada por un valor de 2000 cuando el tercer cuartil apenas alcanza 276.
+
+*V1* -> El valor presentado con más frecuencia es el b.
+
+*V4* -> El valor presentado con más frecuencia es el u.
+
+*V5* -> El valor presentado con más frecuencia es el g.
+
+*V6* -> El valor presentado con más frecuencia es el c.
+
+*V7* -> El valor presentado con más frecuencia es el v.
+
+*V13* -> El valor presentado con más frecuencia es el g.
+
+*V9* -> El valor booleano que está más presente corresponde a TRUE.
+
+*V10* -> El valor booleano que está más presente corresponde a FALSE.
+
+*V12* -> El valor booleano que está más presente corresponde a FALSE.
+
+Se puede utilizar el la funcion apply para identificar el porcentaje de valores faltantes por columna apply(is.na(setdatos), 2, sum)/nrow(setdatos)*100.
+
+```{r Porcentaje de Nulos}
+
+# Porcentaje de Nulos
+print("Porcentaje de Valores Nulos por columna:")
+paste(round((apply(is.na(datos), 2, sum)/nrow(datos))*100 , 2),"%")
+
+
+```
+
+**Nota:**
+Podemos ver que el mayor porcentaje de valores nulos se encuentra en V14, seguido por V1 y V2.
+
+Sustituir los valores faltantes de las variables Para esto se puede realizar varias tecnicas 
+  -Asignar el valor promedio, la media o la mediana 
+  -Utilizar la función missForest
+  -Utilizar la función "na.exclude"
+  -Utilizar la función "na.omit"
+  
+```{r Tratado de nulos}
+
+# Sustituimos valores nulos de V2
+datos$V2[is.na(datos$V2)] <- mean(datos$V2, na.rm=TRUE)
+# Sustituimos valores nulos de V14
+datos$V14[is.na(datos$V14)] <- median(datos$V14, na.rm=TRUE)
+# Omitimos valores nulos para el resto de columnas
+datos <- na.omit(datos)
+
+```
+
+**Nota:**
+
+*V2* -> Sustituimos por la media.
+
+*V14* -> Sustituimos por la mediana, porque la media está muy afectada por el valor atípico de 2000.
+
+Para el resto de atributos, se omitieron las filas con valores nulos, ya que no se tiene un contexto de clasificación y por lo tanto no son sustituibles ni interpolables. 
+
+La omisión de filas no fue tan significativa, ya que se perdieron el 2.75% de ellos solamente.
+
+Sustituir los valores de la variable "V16" a 1 cuando el préstamo es aprobado y a 0 cuando es rechazado.
+
+```{r Revalidación de nulos}
+
+# Previamente estos datos fueron modificados
+head(datos$Estado)
+
+```
+## Including Plots
+
+Realizar los gráficos para identificar la relación de las variables con la variable dependiente "Estado" Utilizar los diferentes tipos de gráficos y agregar un comentario de lo identificado en cada uno de los casos, además de que se debe indicar si se encuentras valores extremos (Outliers).
+
+```{r Identificar relacion, echo=TRUE}
+
+#En el siguiente grafico podria decir que el valor B impacta mas los datos en la variable V16
+plot(datos$V1~datos$Estado, main = "V1 vs Estado", col=c("red","blue"), xlab="Estado", ylab = "V1")
+
+boxplot(datos$V2~datos$Estado, main = "V2 vs Estado", col=c("red","blue"), xlab="Estado", ylab = "V2")
+
+
+```
+
+**Nota:**
+
+El cuadro nos muestra que del 65% de datos que corresponden a b, el 10% tienen estado como rechazado, mientras que del total de a, un 90% tienen el estado como aprobado.
+
+En el boxplot, los valores de V2 que se clasifican como no aprobados en su mayoría tienen valores más bajos, sin embargo en términos de variabilidad son los más afectados, puesto que tienen la mayor cantidad de valores atípicos por encima del cuarto cuartil.
+
+Crear los graficos que muestres la distribución de las variables, cuando aplica
+
+```{r Distribución, echo=TRUE}
+
+hist(datos$V2, border = "yellow", col="lightgreen", main="Distribucion Variable 2")
+
+```
+
+**Nota:**
+
+Como hemos mencionado con anterioridad los valores atípicos tienen impacto. A primera vista podemos ver que la mediana se encuentra en valores de 20 a 30, pero en este caso, por la misma situación, la media será mayor.
+
+Se puede convertir las variables tipo factor de dos niveles a numéricos.
+
+```{r Convertir, echo=TRUE}
+
+#Convertimos V1 a numérico
+datos$V1 <- as.numeric(datos$V1)
+
+#Convertimos V5 a numérico
+datos$V5 <- as.numeric(datos$V5)
+
+```
+
+
+Construir la matriz de correlación de las variables Para esto puede utilizar la funcion "cor" y para visualizarla puede utilizar la funcion "corrplot" de la libreria "corrplot".
+Nota: 
+  * Si la libreria no esta instalada se debe realizar la instalación previa.
+    - install.packages("corrplot") 
+    - library(corrplot)
+  * La funcion cor solo sirve con valores numericos, por lo que se debe hacer con un subset incluyendo solo las columnas numéricas.
+  
+Como resultado de la matriz de correlación se debe indicar lo identificado
+
+```{r Correlacion, echo=TRUE}
+
+corrplot(cor(datos[,c(1,2,3,5,8,9,10,11,12,14,15,16)]), method = "circle")
+
+
+```
+
+**Nota:**
+
+La correlación positiva más notable corresponde a la de Estado con V9, donde muestra que cuando hay un crecimiento lineal de V9, también lo hay en Estado.
+
+También es rescatable la correlación positiva entre V11 y V10; V8 y V2.
+
+Por otra parte, V14 y V3 presentan una correlación negativa, incumpliento la propiedad de creciento lineal común.
+
+
+```{r}
+
+# Gráfico de densidad
+ggplot(datos, aes(x=V8)) + geom_density(alpha= .3) + facet_grid(V9~Estado, labeller = label_both)
+
+```
+
+**Nota:**
+Es más que evidente que los gráficos se ven perjudicados por los outliers, donde anteriormente vimos una distribución totalmente sesgada a la derecha. Pero qué pasaría si omitieramos estos datos?
+
+A partir de tener una causa justificada para su eliminación, ya sea por un error en el sistema o un problema transaccional, crearemos una columna para graficar solamente aquellos que no considermos como outliers("datosout"), tal como se vió en la distribución de cuartiles anteriormente
+
+```{r}
+
+# Columna de identificación de outliers
+datos <- datos %>% mutate(is_outlier = (V8 > 5 | V3 > 10 | V14 > 400 | V15 > 700 | V15 <= 0))
+
+# Datos sin outliers
+datosout <- datos %>% filter(!is_outlier)
+
+```
+
+Ahora graficaremos mediante la densidad la distribución de las variables
+
+```{r}
+
+# Gráfico de densidad
+ggplot(datosout, aes(x=V8)) + geom_density(alpha= .3) + facet_grid(V9~Estado, labeller = label_both) + ggtitle("V8 vs Estado y V9")
+
+```
+
+**Nota:**
+
+Ahora vemos una leve mejora, donde podemos decir que aquellos datos con Estado de Aprobado, con V9 = TRUE en su mayoría tienen valores entre 1 y 2; a diferencia de los Reprobados que en su mayoría tienen valores inferiores a 1.
+
+
+```{r}
+
+# Gráfico de densidad
+ggplot(datosout, aes(x=V8, fill = V7)) + geom_bar(position = "fill") + scale_fill_brewer() + ggtitle("V8 vs V7")
+
+```
+
+**Nota:**
+
+Analizando la misma variable V8, vemos que los valores bajos de ella, tienden a tener valores entre n y z para la variable V7, en otras palabras entre 0 y 1, y como vimos anteriormente estos datos se encuentran en estado de Reprobado, lo cual sería algo importante a considerar.
+
+
+
+## Conclusiones
+
+A manera de conclusión debería estudiarse si los outliers que está generando sesgos en la media son sucesos con justificación aparente o si son errores de medición o registro, puesto que para tener un set de datos limpio debe estudiarse si es un fenómeno común a estudiar o el proceso transitorio de los datos tiene un error en los atributos V3, V8, V11, V14 y V15.
+
+En cuanto a los datos una conclusión preliminar sería que los datos reprobados pueden tener valores bajos de V8 independientemente de la clasificación que asuma V9.
+
+En su mayoría las correlaciones son positivas, no obstante pocas son significativas con valores superiores a 0.8.
+
+La variable V7 tiene un peso significativo en la caracterización del valor V8 y puede tomarse como parámetro para definir un estado de Rechazo.
+
+
+
+
+
+
+

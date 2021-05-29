@@ -1,0 +1,336 @@
+---
+title: "Laboratorio 1, Parte 1"
+author: "Roberto Aguilar"
+date: "5/1/2021"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+
+library("devtools")
+#devtools::install_github("lchiffon/wordcloud2")
+
+
+library("tm")
+library("SnowballC")
+library("wordcloud")
+library("wordcloud2")
+library("RColorBrewer")
+library("sm")
+
+
+```
+
+# Paso 3
+
+Primero accedemos a los discursos en formato .txt, que se encuentran almacenados en el directorio
+
+```{r, warning=FALSE}
+
+# Direccion de documentos en directorio
+
+stevepath <- 'SteveJobsStanford.txt'
+capath <- 'CATraspasoPresidencial.txt'
+lgpath <- 'LGSTraspasoPresidencial.txt'
+
+# Lectura de documentos en formato .txt
+
+text_steve <- readLines(stevepath)
+text_ca <- readLines(capath)
+text_lg <- readLines(lgpath)
+
+```
+
+Ahora creamos una lista de documentos, donde cada doumento tendrá la estructura de un párrafo de discurso mediante la función **Corpus()**, de text mining
+
+```{r, warning=FALSE}
+
+
+# listado de documentos en discurso de Steve Jobs y ambos presidentes de Costa Rica
+
+docs_st <- Corpus(VectorSource(text_steve))
+
+docs_ca <- Corpus(VectorSource(text_ca))
+
+docs_lg <- Corpus(VectorSource(text_lg))
+
+```
+
+
+# Paso 4
+
+Ahora, nuestro interés está en insertar los datos de la forma más limpia posible. Como vimos anteriormente en el discurso de Steve Jobs, ciertos caracteres especiales fueron sustituídos por un "?" pero ahora previo al análisis necesitaremos transformarlos en espacios en blanco para hacer más eficiente el proceso. Para ello usaremos la función tm_map de text mining.
+
+```{r, warning=FALSE}
+
+
+# Se crea un tranformador de contenido que sustituye el caracter especial x que insertemos por un string de un espacio en blanco
+
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+
+# Sustituye por cada vocal
+
+toa <- content_transformer(function (x , pattern ) gsub(pattern, "a", x)) 
+toe <- content_transformer(function (x , pattern ) gsub(pattern, "e", x)) 
+toi <- content_transformer(function (x , pattern ) gsub(pattern, "i", x))
+too <- content_transformer(function (x , pattern ) gsub(pattern, "o", x)) 
+tou <- content_transformer(function (x , pattern ) gsub(pattern, "u", x)) 
+
+# Sustituye por letra ñ
+
+ton <- content_transformer(function (x , pattern ) gsub(pattern, "ñ", x)) 
+
+# Aplicamos la transfomación para cada listado de documentos
+
+# Steve Jobs
+docs_st <- tm_map(docs_st, toSpace, "/")
+docs_st <- tm_map(docs_st, toSpace, "@")
+docs_st <- tm_map(docs_st, toSpace, "\\|")
+docs_st <- tm_map(docs_st, toSpace, "Â€º")
+docs_st <- tm_map(docs_st, toSpace, "Ã¿")
+
+# Luis Guillermo Solis
+docs_lg <- tm_map(docs_lg, toSpace, "/")
+docs_lg <- tm_map(docs_lg, toSpace, "@")
+docs_lg <- tm_map(docs_lg, toSpace, "\\|")
+docs_lg <- tm_map(docs_lg, toa, c("Âš","Â š"))
+docs_lg <- tm_map(docs_lg, toe, c("Â€", "Â€š"))
+docs_lg <- tm_map(docs_lg, toi, c("Â¡", "Â¡š"))
+docs_lg <- tm_map(docs_lg, too, c("Â¢","Â¢š"))
+docs_lg <- tm_map(docs_lg, tou, c("Â£","Â£š"))
+docs_lg <- tm_map(docs_lg, ton, "Â¤") 
+docs_lg <- tm_map(docs_lg, toe, "â€š") 
+
+# Carlos Alvarado
+docs_ca <- tm_map(docs_ca, toSpace, "/")
+docs_ca <- tm_map(docs_ca, toSpace, "@")
+docs_ca <- tm_map(docs_ca, toSpace, "\\|")
+docs_ca <- tm_map(docs_ca, toSpace, "“")
+docs_ca <- tm_map(docs_ca, toSpace, "¡")
+
+
+
+```
+
+Primero hacemos ajustes al discurso de Steve Jobs
+
+```{r, warning=FALSE}
+
+
+# Convertir el texto en lower case
+docs_st <- tm_map(docs_st, content_transformer(tolower))
+# Eliminar numeros
+docs_st <- tm_map(docs_st, removeNumbers)
+# Eliminar stopwords en ingles
+docs_st <- tm_map(docs_st, removeWords, stopwords("english"))
+# Eliminar stopwords personalizados
+docs_st <- tm_map(docs_st, removeWords, c("m", "ll", "ve", "s"))
+# Eliminar puntuaciones
+docs_st <- tm_map(docs_st, removePunctuation)
+# Elimnar espacios extra en blanco
+docs_st <- tm_map(docs_st, stripWhitespace)
+# Eliminamos el caracter especial
+docs_st <- tm_map(docs_st, toSpace, "ï»¿")
+
+```
+
+Lo hacemos para el discurso de Luis Guillermo Solis
+
+```{r, warning=FALSE}
+
+
+# Convertir el texto en lower case
+docs_lg <- tm_map(docs_lg, content_transformer(tolower))
+# Eliminar numeros
+docs_lg <- tm_map(docs_lg, removeNumbers)
+# Eliminar stopwords en ingles
+docs_lg <- tm_map(docs_lg, removeWords, stopwords("spanish"))
+# Eliminar puntuaciones
+docs_lg <- tm_map(docs_lg, removePunctuation)
+# Elimnar espacios extra en blanco
+docs_lg <- tm_map(docs_lg, stripWhitespace)
+# Ajustamos la "a + espacio" 
+docs_lg <- tm_map(docs_lg, toa, "â ")
+# Eliminamos el caracter especial
+docs_lg <- tm_map(docs_lg, toSpace, "ï»¿")
+# Eliminar stopwords personalizados
+docs_lg <- tm_map(docs_lg, removeWords, c("si", "ser", "sino", "cada", "tras", "la", "el", "las" , "los", "mas", "m�s" ,                                       "que", "con", "por", "del", "una", "como", "para", "sus", "cuando", "ese", "esa",
+                                          "esta", "que,", "pero", "sin", "sino","mas"))
+
+```
+
+
+Y también lo hacemos para el discurso de Carlos Alvarado
+
+```{r, warning=FALSE}
+
+
+# Convertir el texto en lower case
+docs_ca <- tm_map(docs_ca, content_transformer(tolower))
+# Eliminar numeros
+docs_ca <- tm_map(docs_ca, removeNumbers)
+# Eliminar stopwords en ingles
+docs_ca <- tm_map(docs_ca, removeWords, stopwords("spanish"))
+# Eliminar stopwords personalizados
+docs_ca <- tm_map(docs_ca, removeWords, c("si", "ser", "sino", "cada", "tras", "la", "el", "las" , "los", "mas", "m�s" ,                                       "que", "con", "por", "del", "una", "como", "para", "sus", "cuando", "ese", "esa",
+                                          "esta", "que,", "pero", "sin", "sino"))
+# Eliminar puntuaciones
+docs_ca <- tm_map(docs_ca, removePunctuation)
+# Elimnar espacios extra en blanco
+docs_ca <- tm_map(docs_ca, stripWhitespace)
+# Ajustamos la "a + espacio" 
+docs_ca <- tm_map(docs_ca, toa, "â ")
+# Eliminamos el caracter especial
+docs_ca <- tm_map(docs_ca, toSpace, "ï»¿")
+
+```
+
+
+# Paso 6
+
+Ahora creamos una tabla matriz con la frecuencia de aparacion de palabras para cada discurso
+
+
+```{r, warning=FALSE}
+
+
+# Steve Jobs
+dtmst <- TermDocumentMatrix(docs_st)
+mst <- as.matrix(dtmst)
+vst <- sort(rowSums(mst),decreasing=TRUE)
+dst <- data.frame(word = names(vst),freq=vst)
+head(dst, 10)
+
+# Luis Guillermo
+dtmlg <- TermDocumentMatrix(docs_lg)
+mlg <- as.matrix(dtmlg)
+vlg <- sort(rowSums(mlg),decreasing=TRUE)
+dlg <- data.frame(word = names(vlg),freq=vlg)
+head(dlg, 10)
+
+# Carlos Alvarado
+dtmca <- TermDocumentMatrix(docs_ca)
+mca <- as.matrix(dtmca)
+vca <- sort(rowSums(mca),decreasing=TRUE)
+dca <- data.frame(word = names(vca),freq=vca)
+head(dca, 10)
+
+```
+
+
+
+# Paso 7
+
+Procedemos a ilustrar con un Wordcloud para cada discurso
+
+
+### Discurso de Steve Jobs
+
+```{r, warning=FALSE}
+
+set.seed(1234)
+wordcloud(words = dst$word, freq = dst$freq, min.freq = 1, max.words=100,
+          random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+
+
+```
+
+
+### Discurso de Luis Guillermo Solis
+
+```{r, warning=FALSE}
+
+set.seed(1234)
+wordcloud(words = dlg$word, freq = dlg$freq, min.freq = 1, max.words=100,
+          random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+
+
+```
+
+
+### Discurso de Carlos Alvarado
+
+```{r, warning=FALSE}
+
+set.seed(1234)
+wordcloud(words = dca$word, freq = dca$freq, min.freq = 1, max.words=100,
+          random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+
+
+```
+
+# Paso 8
+
+Como análisis adicional, buscamos aquellas palabras que cómo mínimo aparezcan 4 veces dentros de cada discurso, la asociación de los términos
+
+
+### Discurso de Steve Jobs
+
+```{r, warning=FALSE}
+
+# Frecuencia
+findFreqTerms(dtmst, lowfreq = 4)
+# Asociación con "college"
+findAssocs(dtmst, terms = "college", corlimit = 0.3)
+
+```
+
+Ahora tenemos la frecuencia de forma visual
+
+```{r, warning=FALSE}
+
+# Grafico de barras
+barplot(dst[1:10,]$freq, las = 2, names.arg = dst[1:10,]$word, col ="lightblue", main
+="Palabras más frecuentes de Steve Jobs", ylab = "Frecuencia de las Palabras")
+
+```
+
+
+
+### Discurso de Luis Guillermo Solis
+
+```{r, warning=FALSE}
+
+# Frecuencia
+findFreqTerms(dtmlg, lowfreq = 4)
+
+```
+
+Ahora tenemos la frecuencia de forma visual
+
+```{r, warning=FALSE}
+
+# Grafico de barras
+barplot(dlg[1:10,]$freq, las = 2, names.arg = dlg[1:10,]$word, col ="lightblue", main
+="Palabras más frecuentes de Luis Guillermo Solis", ylab = "Frecuencia de las Palabras")
+
+```
+
+
+
+
+
+### Discurso de Carlos Alvarado
+
+```{r, warning=FALSE}
+
+# Frecuencia
+findFreqTerms(dtmca, lowfreq = 4)
+
+
+```
+
+Ahora tenemos la frecuencia de forma visual
+
+```{r, warning=FALSE}
+
+# Grafico de barras
+barplot(dca[1:10,]$freq, las = 2, names.arg = dca[1:10,]$word, col ="lightblue", main
+="Palabras más frecuentes de Carlos Alvarado", ylab = "Frecuencia de las Palabras")
+
+```
+
+
+
